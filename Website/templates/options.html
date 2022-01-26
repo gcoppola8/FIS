@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+	<h2> Options </h2>
+
+	<p>
+		{{message}}
+		<ul>
+			
+			<li><a href= "/create" target= "blank"> Create a case </a></li>
+			<li><a href= "/search" target= "blank"> Search for cases </a></li>
+			<li><a href= "/edit" target= "blank"> Edit a case </a></li>
+			<li><a href= "/delete" target= "blank"> Delete a case </a></li>
+			<li><a href= "/logout" target= "blank"> Logout </a></li>
+		
+		</ul>
+	</p>
+{% endblock %}
