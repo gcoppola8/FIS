@@ -5,6 +5,8 @@ import json
 import requests
 import time
 import pyDes
+from threading import Thread
+import logging
 
 from core.Authorization import Authorizer
 from core.CaseService import CaseService
@@ -18,6 +20,14 @@ app = Flask(__name__)
 app.secret_key = '1@#rTb47BK"_9'
 app.config['PERMANENT_SESSION_LIFETIME'] = 1800  # Set session cookie to 30mins
 
+# Set up separate filehandler and formatter for Flask logger: app.logger
+# so that ceratin logs can be logged to a log file
+format2 = '%(levelname)s:%(asctime)s%(message)s'
+handler2 = logging.FileHandler('log.log', mode= 'a')
+handler2.setLevel(logging.WARNING)
+formatter2 = logging.Formatter(format2)
+handler2.setFormatter(formatter2)
+app.logger.addHandler(handler2)
 case_service = CaseService(CaseRepository(), Authorizer())
 
 # Instantiate encryption object
@@ -90,6 +100,11 @@ def login():
                 # Create a session and assign the user's name and auth level to it 
                 session['user_auth'] = [name, logged_in_users_flag[name]]
                 del logged_in_users_flag[name]
+                # Log login in a separate thread
+                log_message = session['user_auth'][0] + ' logged in at auth level of: ' + \
+                              str(session['user_auth'][1])
+                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread.start()
                 # **Log login outcome**
                 return redirect("/options")
             elif logged_in_users_flag[name] == "FNN":
@@ -204,7 +219,11 @@ def logout():
         # Send to the Authentication microservice to process and update database.
         http_header = {'Content-Type': 'application/json'}
         reply = requests.post('http://localhost:5005/logout', headers=http_header, data=name_json)
+        username = session['user_auth'][0]
         session.pop('user_auth', None)
+        log_message = username + ' logged out'
+        log_thread = Thread(target= app.logger.warning, args=(log_message,))
+        log_thread.start()
         return "logout successful"
     except:
         return "logout unsuccessful"
