@@ -8,8 +8,11 @@
 
 import json
 
+import bcrypt
 import pyDes
 import requests
+
+from core import my_salt
 from data.UserRepository import UserRepository
 from core.UserService import UserService
 
@@ -40,24 +43,29 @@ def login():
     encrypted_password = bytes(login[1])
     # Decrypt password and convert to UTF-8 string 
     password = encryptor.decrypt(encrypted_password)
-    password = password.decode()
+    password = bcrypt.hashpw(password, my_salt)
+
+    # **result = [name, authorisation_level]**
+    result = []
 
     # **Try fetch username and password from database**
     user_service = UserService(UserRepository())
     user = user_service.find_by_username(username=username)
-    if user.password == password:
-        pass
-
-    # **result = [name, authorisation_level]**
-    result = []
-    if username == 'Michael' and password == "1234":
-        result = [username, 1]
-    elif username == 'Amy' and password == "5678":
-        result = [username, 2]
-    elif username == 'Aaaa' and password == "abc":
+    if user is None:
         result = [username, "FNN"]
-    elif username == 'Wes' and password == "aefg":
-        result = [username, "F3"]
+    elif user.password == password:
+        result = [user.username, user.auth_level]
+    else:
+        result = [user.username, "F"]
+
+    # if username == 'Michael' and password == "1234":
+    #     result = [username, 1]
+    # elif username == 'Amy' and password == "5678":
+    #     result = [username, 2]
+    # elif username == 'Aaaa' and password == "abc":
+    #     result = [username, "FNN"]
+    # elif username == 'Wes' and password == "aefg":
+    #     result = [username, "F3"]
 
     # Return the result to the main webserver 
     result_json = json.dumps(result)

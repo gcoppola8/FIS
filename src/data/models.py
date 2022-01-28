@@ -13,14 +13,16 @@ class User(Base):
     username = Column(String(50), unique=True)
     email = Column(String(256), unique=True)
     password = Column(String)
+    auth_level = Column(Integer)
     cases = relationship("Case", back_populates="createdBy")
     evidences = relationship("Evidence", back_populates="createdBy")
 
-    def __init__(self, username, email="", password=""):
+    def __init__(self, username, email="", password="", auth_level=1):
         self.username = username
         self.email = email
         self.password = password
         self.createdOn = datetime.now()
+        self.auth_level = auth_level
 
     def __repr__(self) -> str:
         return f"User(id={self.user_id!r}, username={self.username!r}, email={self.email!r})"

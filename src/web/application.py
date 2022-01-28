@@ -106,7 +106,11 @@ def login():
                 log_thread = Thread(target= app.logger.warning, args=(log_message,))
                 log_thread.start()
                 # **Log login outcome**
-                return redirect("/options")
+                return redirect("/cases")
+            #TODO add an F
+            elif logged_in_users_flag[name] == "F":
+                # **Log login outcome**
+                return render_template("login.html", message="Login Failed. Please try again")
             elif logged_in_users_flag[name] == "FNN":
                 # **Log login outcome**
                 return render_template("login.html", message="Username does not exist. Please try again")
@@ -158,6 +162,7 @@ def create():
         The create page allows a user to create a case
         by first entering its related metadata.
     """
+
     if request.method == 'GET':
         return render_template("create.html")
     elif request.method == 'POST':
