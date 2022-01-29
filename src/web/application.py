@@ -8,6 +8,8 @@ import pyDes
 from threading import Thread
 import logging
 
+from sys import path
+path.append('..')
 from core.Authorization import Authorizer
 from core.CaseService import CaseService
 from data import Case, User
