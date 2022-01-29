@@ -50,9 +50,9 @@ def check_logged_in(html_file, msg):
     except KeyError:
         return redirect(url_for('login', message="You are not logged in"))
 
-    # Initial login URL logic follows
+    
 
-
+# Initial login URL logic follows
 @app.route("/", methods=["GET", "POST"])
 def login():
     """
