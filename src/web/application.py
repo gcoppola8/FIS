@@ -8,6 +8,8 @@ import pyDes
 from threading import Thread
 import logging
 
+from sys import path
+path.append('..')
 from core.Authorization import Authorizer
 from core.CaseService import CaseService
 from data import Case, User
@@ -47,7 +49,6 @@ def check_logged_in(html_file, msg):
             return render_template(html_file, message=msg)
     except KeyError:
         return redirect(url_for('login', message="You are not logged in"))
-
     
 
 # Initial login URL logic follows
@@ -105,15 +106,19 @@ def login():
                               str(session['user_auth'][1])
                 log_thread = Thread(target= app.logger.warning, args=(log_message,))
                 log_thread.start()
-                # **Log login outcome**
                 return redirect("/cases")
-            #TODO add an F
             elif logged_in_users_flag[name] == "F":
-                # **Log login outcome**
+                log_message = ' ' + name + ' failed to log in'
+                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread.start()
                 return render_template("login.html", message="Login Failed. Please try again")
             elif logged_in_users_flag[name] == "FNN":
-                # **Log login outcome**
+                log_message = ' ' + name + ' failed to log in'
+                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread.start()
                 return render_template("login.html", message="Username does not exist. Please try again")
+
+            # For future to lock a user's profile
             elif logged_in_users_flag[name] == "F1":
                 # **Log login outcome**
                 return render_template("login.html", message="Incorrect password. Please try again. two more attempts")
