@@ -43,16 +43,6 @@ logged_in_users_flag = {}
 
 def login_required(view):
     """ Checks authorisation """
-<<<<<<< HEAD
-    try:
-        if (session['user_auth'][1] == 1 or
-                session['user_auth'][1] == 2 or
-                session['user_auth'][1] == 3):
-            return render_template(html_file, message=msg)
-    except KeyError:
-        return redirect(url_for('login', message="You are not logged in"))
-    
-=======
 
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -67,8 +57,6 @@ def login_required(view):
             return redirect(url_for('login'))
 
     return wrapped_view
-
->>>>>>> a51f0c35ddc2f1f8423e415fb45c4f19124269e4
 
 # Initial login URL logic follows
 @app.route("/", methods=["GET", "POST"])
@@ -173,12 +161,6 @@ def options():
         to navigate to the required service.
     """
 
-    msg = request.method
-    if msg == "GET":
-        result = check_logged_in("options.html", "Please select below what you would like to do:")
-        return result
-
-    # Create URL logic
 
 
 @app.route("/create", methods=["GET", "POST"])
