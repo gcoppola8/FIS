@@ -18,11 +18,11 @@ values (6, NULL, 'user6', 'ipeyto5@prnewswire.com',
         "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '3');
 
 insert into permission (permission_id, entity, operation, user)
-values (1, '50', '1', '1');
+values (1, '1', '1', '1');
 insert into permission (permission_id, entity, operation, user)
-values (2, '39', '3', '1');
+values (2, '1', '3', '1');
 insert into permission (permission_id, entity, operation, user)
-values (3, '90', '3', '1');
+values (3, '1', '2', '1');
 insert into permission (permission_id, entity, operation, user)
 values (4, '34', '9', '1');
 insert into permission (permission_id, entity, operation, user)

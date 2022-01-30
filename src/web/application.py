@@ -184,7 +184,7 @@ def create():
 # Search URL logic
 @app.route("/cases", methods=["GET", "POST"])
 @login_required
-def search():
+def cases():
     """
         The search page allows a user to enter a case number,
         creation date, or/and name substring to reveal the cases 
@@ -217,7 +217,18 @@ def edit():
         case.name = request.form['name']
         case.description = request.form['description']
 
-        return render_template("cases.html")
+        return redirect(url_for("cases"))
+
+@app.route("/delete", methods=['GET'])
+@login_required
+def delete():
+    """
+        Delete endpoint
+    """
+    case_id = request.args.get('case_id')
+    case = case_service.find_by_id(case_id)
+    case_service.archive(case)
+    return redirect(url_for("cases"))
 
 
 # Logout URL logic

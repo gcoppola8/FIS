@@ -19,7 +19,6 @@ class CaseService:
         self.authorizer = authorizer
 
     def find_by_id(self, case_id: int) -> Case:
-        self.authorizer.authorize(OpCode.READ)
         return self.case_repo.find_by_id(case_id)
 
     def find_all(self, page_number: int = 1, page_size: int = 1000) -> list[Case]:
@@ -29,7 +28,7 @@ class CaseService:
         return self.case_repo.find_all(page_number, page_size)
 
     def archive(self, case: Case):
-        self.authorizer.authorize(OpCode.DELETE)
+        self.authorizer.authorize(OpCode.DELETE, case=case)
         case.deleted = True
         case.deletedOn = datetime.datetime.now()
         self.case_repo.save(case)

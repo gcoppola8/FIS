@@ -11,23 +11,23 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             {% if cases %}
-            <table>
-                <thead>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date creation</th>
-                <th>Owner</th>
-                <th>Edit</th>
-                <th>Delete</th>
+            <table class="table">
+                <thead class="thead-dark">
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date creation</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
                 </thead>
                 {% for case in cases %}
                 <tr>
                     <td>{{case.name}}</td>
-                    <td>{{case.description}}</td>
+                    <td><div style="height: 200px; overflow: auto"> {{case.description}}</div></td>
                     <td>{{case.createdOn}}</td>
                     <td>{{case.createdBy}}</td>
-                    <td>Edit - {{case.case_id}}</td>
-                    <td>Delete - {{case.case_id}}</td>
+                    <td><a href="edit?case_id={{case.case_id}}"> Edit </a></td>
+                    <td><a href="delete?case_id={{case.case_id}}"> Delete </a></td>
                 </tr>
                 {% endfor %}
 

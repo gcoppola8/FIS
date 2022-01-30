@@ -3,7 +3,7 @@ from data import User, Case, OpCode
 
 
 class Authorizer:
-    def authorize(self, op_code: OpCode):
+    def authorize(self, op_code: OpCode, case: Case):
         return True
 
 
