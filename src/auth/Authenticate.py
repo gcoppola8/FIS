@@ -46,13 +46,13 @@ def login():
     # Decrypt password and convert to UTF-8 string 
     password = encryptor.decrypt(encrypted_password)
     password = bcrypt.hashpw(password, my_salt)
-
-    # **result = [name, authorisation_level]**
+    password = str(password)
     result = []
 
-    # **Try fetch username and password from database**
+    # Fetch username and password from database**
     user_service = UserService(UserRepository())
     user = user_service.find_by_username(username=username)
+    
     if user is None:
         result = [username, "FNN"]
     elif user.password == password:
@@ -60,19 +60,10 @@ def login():
     else:
         result = [user.username, "F"]
 
-    # if username == 'Michael' and password == "1234":
-    #     result = [username, 1]
-    # elif username == 'Amy' and password == "5678":
-    #     result = [username, 2]
-    # elif username == 'Aaaa' and password == "abc":
-    #     result = [username, "FNN"]
-    # elif username == 'Wes' and password == "aefg":
-    #     result = [username, "F3"]
-
     # Return the result to the main webserver 
     result_json = json.dumps(result)
     http_header = {'Content-Type': 'application/json'}
-    repy = requests.post('http://localhost:5000/update_users', headers=http_header, data=result_json)
+    reply = requests.post('http://localhost:5000/update_users', headers=http_header, data=result_json)
 
     return 'Succeeded'
 

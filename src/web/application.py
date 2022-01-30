@@ -77,7 +77,7 @@ def login():
             password = request.form.get("password")
             encrypted_password = (encryptor.encrypt(password))
             # The encytped password is converted to a list of integers to make it
-            # JSON serialisable as it is returned as a bytestring.
+            # JON serialisable as it is returned as a bytestring.
             # The list is put into another list also containing the username entered.
             login = [name, list(encrypted_password)]
             login_json = json.dumps(login)
