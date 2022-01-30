@@ -12,7 +12,7 @@ class DefaultAuthorizer(Authorizer):
     def authorize(self, op_code: OpCode, case: Case = None):
         current_user: User = get_user()
 
-        if case is None or current_user is None:
+        if current_user is None:
             raise AuthError
 
         # User with high authorization level.
@@ -20,13 +20,14 @@ class DefaultAuthorizer(Authorizer):
             return True
 
         # The current user is the owner of the entity
-        if current_user == case.createdBy:
+        if case is not None and current_user == case.createdBy:
             return True
 
         # the current user has permission for the requested operation
-        permission = PermissionRepository.verify(case.get_id(), op_code, current_user.user_id)
-        if permission is not None:
-            return True
+        if case is not None:
+            permission = PermissionRepository.verify(case.get_id(), op_code, current_user.user_id)
+            if permission is not None:
+                return True
 
         raise AuthError
 

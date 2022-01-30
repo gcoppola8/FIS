@@ -23,8 +23,6 @@ class CaseService:
         return self.case_repo.find_by_id(case_id)
 
     def find_all(self, page_number: int = 1, page_size: int = 1000) -> list[Case]:
-        self.authorizer.authorize(OpCode.READ)
-
         if page_size is None or page_number is None:
             return self.case_repo.find_all()
 
@@ -36,6 +34,13 @@ class CaseService:
         case.deletedOn = datetime.datetime.now()
         self.case_repo.save(case)
 
+    def create(self, case: Case):
+        self.authorizer.authorize(OpCode.CREATE)
+        return self.case_repo.save(case)
+
     def save(self, case: Case):
         self.authorizer.authorize(OpCode.UPDATE)
         return self.case_repo.save(case)
+
+    def authorize_create(self):
+        self.authorizer.authorize(OpCode.CREATE)

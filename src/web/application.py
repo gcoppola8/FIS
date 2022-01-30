@@ -10,14 +10,15 @@ from threading import Thread
 import logging
 
 from sys import path
+
 path.append('..')
-from core.Authorization import Authorizer
+from core.Authorization import Authorizer, AuthError
 from core.CaseService import CaseService
 from data import Case, User
 from data.CaseRepository import CaseRepository
 
 # Create Flask instance and set configurations
-from web.authorization import get_user
+from web.authorization import get_user, DefaultAuthorizer
 
 app = Flask(__name__)
 app.secret_key = '1@#rTb47BK"_9'
@@ -31,7 +32,7 @@ handler2.setLevel(logging.WARNING)
 formatter2 = logging.Formatter(format2)
 handler2.setFormatter(formatter2)
 app.logger.addHandler(handler2)
-case_service = CaseService(CaseRepository(), Authorizer())
+case_service = CaseService(CaseRepository(), DefaultAuthorizer())
 
 # Instantiate encryption object
 encryptor = pyDes.triple_des("VeRy$ecret#1#3#5", pad=".")
@@ -47,9 +48,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         try:
-            if (session['user_auth'][1] == 1 or
-                    session['user_auth'][1] == 2 or
-                    session['user_auth'][1] == 3):
+            if session['user_auth']:
                 return view(**kwargs)
             else:
                 return redirect(url_for('login'))
@@ -57,6 +56,7 @@ def login_required(view):
             return redirect(url_for('login'))
 
     return wrapped_view
+
 
 # Initial login URL logic follows
 @app.route("/", methods=["GET", "POST"])
@@ -116,12 +116,12 @@ def login():
                 return redirect("/cases")
             elif logged_in_users_flag[name] == "F":
                 log_message = ' ' + name + ' failed to log in'
-                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread = Thread(target=app.logger.warning, args=(log_message,))
                 log_thread.start()
                 return render_template("login.html", message="Login Failed. Please try again")
             elif logged_in_users_flag[name] == "FNN":
                 log_message = ' ' + name + ' failed to log in'
-                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread = Thread(target=app.logger.warning, args=(log_message,))
                 log_thread.start()
                 return render_template("login.html", message="Username does not exist. Please try again")
 
@@ -162,7 +162,6 @@ def options():
     """
 
 
-
 @app.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
@@ -172,11 +171,12 @@ def create():
     """
 
     if request.method == 'GET':
+        case_service.authorize_create()
         return render_template("create.html")
     elif request.method == 'POST':
         logged_user: User = get_user()
         case = Case(logged_user.user_id, name=request.form['name'], description=request.form['description'])
-        case_service.save(case)
+        case_service.create(case)
 
         return render_template("cases.html")
 
@@ -240,9 +240,14 @@ def logout():
         log_message = username + ' logged out'
         log_thread = Thread(target=app.logger.warning, args=(log_message,))
         log_thread.start()
-        return "logout successful"
+        return redirect(url_for("login"))
     except:
         return "logout unsuccessful"
+
+
+@app.errorhandler(AuthError)
+def forbidden_op(e):
+    return 'Forbidden Operation', 403
 
 
 if __name__ == '__main__':

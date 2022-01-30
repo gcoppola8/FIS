@@ -15,15 +15,20 @@
 <body>
 
 <ul class="nav justify-content-center">
-  <li class="nav-item">
-    <a class="nav-link" href="cases">Cases</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="create">Create</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="/">Login</a>
-  </li>
+    <li class="nav-item">
+        <a class="nav-link" href="cases">Cases</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="create">Create</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/">Login
+        {% if session['user_auth'] %} (Logged in as {{session['user_auth'][0]}}) {% endif %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+    </li>
 </ul>
 
 {% block body %}
