@@ -1,21 +1,21 @@
 insert into user (user_id, createdOn, username, email, password, auth_level)
-values (1, NULL, 'user1', 'sshore0@wikispaces.com', "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''",
+values (1, NULL, 'user1', 'sshore0@wikispaces.com', "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'",
         '1');
 insert into user (user_id, createdOn, username, email, password, auth_level)
 values (2, NULL, 'user2', 'cmcilenna1@flavors.me',
-        "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''", '1');
+        "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '1');
 insert into user (user_id, createdOn, username, email, password, auth_level)
 values (3, NULL, 'user3', 'scracoe2@techcrunch.com',
-        "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''", '2');
+        "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '2');
 insert into user (user_id, createdOn, username, email, password, auth_level)
 values (4, NULL, 'user4', 'clantuffe3@epa.gov',
-        "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''", '2');
+        "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '2');
 insert into user (user_id, createdOn, username, email, password, auth_level)
 values (5, NULL, 'user5', 'rkilgallon4@amazon.de',
-        "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''", '3');
+        "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '3');
 insert into user (user_id, createdOn, username, email, password, auth_level)
 values (6, NULL, 'user6', 'ipeyto5@prnewswire.com',
-        "b''$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq''", '3');
+        "b'$2b$12$E7l3/2kbCaItkg85YhYBte2Qy1skn8VGmMrh1zvw3QD4gEhrU3odq'", '3');
 
 insert into permission (permission_id, entity, operation, user)
 values (1, '50', '1', '1');
