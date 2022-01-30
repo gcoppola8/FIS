@@ -1,4 +1,5 @@
 """ This is the main module for the Flask webserver """
+import functools
 
 from flask import Flask, render_template, request, redirect, session, Response, url_for
 import json
@@ -25,7 +26,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 1800  # Set session cookie to 30mins
 # Set up separate filehandler and formatter for Flask logger: app.logger
 # so that ceratin logs can be logged to a log file
 format2 = '%(levelname)s:%(asctime)s%(message)s'
-handler2 = logging.FileHandler('log.log', mode= 'a')
+handler2 = logging.FileHandler('log.log', mode='a')
 handler2.setLevel(logging.WARNING)
 formatter2 = logging.Formatter(format2)
 handler2.setFormatter(formatter2)
@@ -40,8 +41,9 @@ encryptor = pyDes.triple_des("VeRy$ecret#1#3#5", pad=".")
 logged_in_users_flag = {}
 
 
-def check_logged_in(html_file, msg):
+def login_required(view):
     """ Checks authorisation """
+<<<<<<< HEAD
     try:
         if (session['user_auth'][1] == 1 or
                 session['user_auth'][1] == 2 or
@@ -50,6 +52,23 @@ def check_logged_in(html_file, msg):
     except KeyError:
         return redirect(url_for('login', message="You are not logged in"))
     
+=======
+
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        try:
+            if (session['user_auth'][1] == 1 or
+                    session['user_auth'][1] == 2 or
+                    session['user_auth'][1] == 3):
+                return view(**kwargs)
+            else:
+                return redirect(url_for('login'))
+        except KeyError:
+            return redirect(url_for('login'))
+
+    return wrapped_view
+
+>>>>>>> a51f0c35ddc2f1f8423e415fb45c4f19124269e4
 
 # Initial login URL logic follows
 @app.route("/", methods=["GET", "POST"])
@@ -104,7 +123,7 @@ def login():
                 # Log login in a separate thread
                 log_message = session['user_auth'][0] + ' logged in at auth level of: ' + \
                               str(session['user_auth'][1])
-                log_thread = Thread(target= app.logger.warning, args=(log_message,))
+                log_thread = Thread(target=app.logger.warning, args=(log_message,))
                 log_thread.start()
                 return redirect("/cases")
             elif logged_in_users_flag[name] == "F":
@@ -147,6 +166,7 @@ def log_users():
 
 # Options URL logic
 @app.route("/options", methods=["GET", "POST"])
+@login_required
 def options():
     """
         The options page provides an initial means to the user
@@ -162,6 +182,7 @@ def options():
 
 
 @app.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     """
         The create page allows a user to create a case
@@ -171,7 +192,7 @@ def create():
     if request.method == 'GET':
         return render_template("create.html")
     elif request.method == 'POST':
-        logged_user: User = get_user(request)
+        logged_user: User = get_user()
         case = Case(logged_user.user_id, name=request.form['name'], description=request.form['description'])
         case_service.save(case)
 
@@ -180,6 +201,7 @@ def create():
 
 # Search URL logic
 @app.route("/cases", methods=["GET", "POST"])
+@login_required
 def search():
     """
         The search page allows a user to enter a case number,
@@ -194,6 +216,7 @@ def search():
 
 # Edit URL logic
 @app.route("/edit", methods=["GET", "POST"])
+@login_required
 def edit():
     """
         The edit case page requires a user to enter a case
@@ -217,6 +240,7 @@ def edit():
 
 # Logout URL logic
 @app.route("/logout", methods=["GET", "POST"])
+@login_required
 def logout():
     """
         To log out.
@@ -232,7 +256,7 @@ def logout():
         username = session['user_auth'][0]
         session.pop('user_auth', None)
         log_message = username + ' logged out'
-        log_thread = Thread(target= app.logger.warning, args=(log_message,))
+        log_thread = Thread(target=app.logger.warning, args=(log_message,))
         log_thread.start()
         return "logout successful"
     except:
