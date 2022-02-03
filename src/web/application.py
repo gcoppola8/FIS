@@ -57,6 +57,15 @@ def login_required(view):
 
     return wrapped_view
 
+@app.errorhandler(AuthError)
+def forbidden_op(e):
+    """ Handles exception raised for unauthorised activity """
+    name = session["user_auth"][0]
+    log_message = ' ' + name + ' failed to log in'
+    log_thread = Thread(target=app.logger.warning, args=(log_message,))
+    log_thread.start()
+    return 'Forbidden Operation', 403
+
 
 # Initial login URL logic follows
 @app.route("/", methods=["GET", "POST"])
@@ -146,7 +155,7 @@ def log_users():
     ''' Creates an entry to be stored temporarily in a global dictionary. '''
 
     global logged_in_users_flag
-
+    # Receive response from Authenticate microservice
     new_user = request.json
     logged_in_users_flag[new_user[0]] = new_user[1]
     return "successful"
@@ -246,19 +255,16 @@ def logout():
         # Send to the Authentication microservice to process and update database.
         http_header = {'Content-Type': 'application/json'}
         reply = requests.post('http://localhost:5005/logout', headers=http_header, data=name_json)
+        # Remove session dictionary from server
         username = session['user_auth'][0]
         session.pop('user_auth', None)
+        # Log changes
         log_message = username + ' logged out'
         log_thread = Thread(target=app.logger.warning, args=(log_message,))
         log_thread.start()
         return redirect(url_for("login"))
     except:
         return "logout unsuccessful"
-
-
-@app.errorhandler(AuthError)
-def forbidden_op(e):
-    return 'Forbidden Operation', 403
 
 
 if __name__ == '__main__':
