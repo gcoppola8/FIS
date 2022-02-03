@@ -51,17 +51,18 @@ def login_required(view):
             if session['user_auth']:
                 return view(**kwargs)
             else:
-                return redirect(url_for('login'))
+                return redirect(url_for('login', message = "Please log in"))
         except KeyError:
-            return redirect(url_for('login'))
+            return redirect(url_for('login', message = "Please log in"))
 
     return wrapped_view
 
 @app.errorhandler(AuthError)
 def forbidden_op(e):
     """ Handles exception raised for unauthorised activity """
+    
     name = session["user_auth"][0]
-    log_message = ' ' + name + ' failed to log in'
+    log_message = ' ' + name + ' attempted unauthorised function'
     log_thread = Thread(target=app.logger.warning, args=(log_message,))
     log_thread.start()
     return 'Forbidden Operation', 403
@@ -152,8 +153,11 @@ def login():
 
 @app.route("/update_users", methods=["POST"])
 def log_users():
-    ''' Creates an entry to be stored temporarily in a global dictionary. '''
-
+    """
+        API for authentication microservice.
+        Creates an entry to be stored temporarily in a global dictionary. '''
+    """
+    
     global logged_in_users_flag
     # Receive response from Authenticate microservice
     new_user = request.json
