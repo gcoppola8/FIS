@@ -1,3 +1,8 @@
+"""
+In this module, the main entities of our system are defined.
+Each entity is mapped with standard sqlalchemy.orm notations to be managed by the orm engine.
+"""
+
 from sqlalchemy import Integer, Column, String, Boolean, Date, DateTime, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime

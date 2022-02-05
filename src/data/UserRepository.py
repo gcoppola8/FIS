@@ -2,6 +2,12 @@ from data import *
 
 
 class UserRepository:
+    """
+    UserRepository is responsible to access databases to create and retrieve Users.
+    It abstracts the usage of sqlalchemy, exposing simple methods.
+    It is implemented as a singleton.
+    """
+
     _instance = None
 
     def __new__(cls):

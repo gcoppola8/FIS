@@ -8,6 +8,11 @@ from data.UserRepository import UserRepository
 
 
 class DefaultAuthorizer(Authorizer):
+    """
+    DefaultAuthorizer is our demo implementation. That depends on flask framework and a permission mechanism defined
+    in Permission table. It can obviously be implemented differently to improve authorization.
+    Based on our initial plan, the Authorizer should use a Role-based access control (RBAC).
+    """
 
     def authorize(self, op_code: OpCode, case: Case = None):
         current_user: User = get_user()
