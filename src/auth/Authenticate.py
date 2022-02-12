@@ -12,6 +12,9 @@ import bcrypt
 import pyDes
 import requests
 
+from sys import path
+
+path.append('..')
 from core import my_salt
 from data.UserRepository import UserRepository
 from core.UserService import UserService
