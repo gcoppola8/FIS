@@ -1,5 +1,6 @@
 import bcrypt
-
+from sys import path
+path.append('..')
 from core import my_salt
 from data import User
 from data.UserRepository import UserRepository

@@ -1,4 +1,6 @@
 from flask import request, session
+from sys import path
+path.append('..')
 
 from core.Authorization import Authorizer, AuthError
 from core.UserService import UserService

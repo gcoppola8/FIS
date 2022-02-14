@@ -1,5 +1,6 @@
 import datetime
-
+from sys import path
+path.append('..')
 from core.Authorization import Authorizer, AuthError
 from data import Case, OpCode
 from data.CaseRepository import CaseRepository

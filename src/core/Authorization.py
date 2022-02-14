@@ -1,3 +1,5 @@
+from sys import path
+path.append('..')
 from data.PermissionRepository import PermissionRepository
 from data import User, Case, OpCode
 

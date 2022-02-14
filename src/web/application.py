@@ -188,7 +188,7 @@ def create():
         return render_template("create.html")
     elif request.method == 'POST':
         logged_user: User = get_user()
-        case = Case(logged_user.user_id, name=request.form['name'], description=request.form['description'])
+        case = Case(logged_user.user_id, name=request.form.get('name'), description=request.form.get('description'))
         case_service.create(case)
 
         return render_template("cases.html")
